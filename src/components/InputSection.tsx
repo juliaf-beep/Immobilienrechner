@@ -92,15 +92,6 @@ export default function InputSection({ mode, values: v, onChange }: InputSection
   return (
     <div className="space-y-4">
       <Card className="bg-white rounded-km p-6">
-        <SectionTitle>Rahmenbedingungen</SectionTitle>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8">
-          {f('infl', 'Inflation (% p. a.)', 'Allgemeine Preissteigerungsrate \u2014 bestimmt, wie schnell Instandhaltungskosten steigen. <strong>Historisch DE:</strong> ~2\u20133%, EZB-Ziel: 2%.', 0.1)}
-          {f('rend', 'Depot-Rendite (% p. a.)', 'Erwartete j\u00e4hrliche Rendite des ETF-Depots. <strong>MSCI World:</strong> historisch ~7\u20138% brutto, nach Kosten konservativ 5\u20137%. Anleihen/Tagesgeld: 2\u20134%.', 0.5)}
-          {f('kest', 'KESt auf Depot-Gewinne (%)', 'Effektiver Steuersatz auf ETF-Gewinne beim Verkauf.<br><strong>Aktien-ETF:</strong> 25% \u00d7 0,7 Teilfreistellung \u00d7 1,055 Soli = 18,46%<br><strong>Anleihen/Geldmarkt:</strong> 26,375%', 0.5)}
-        </div>
-      </Card>
-
-      <Card className="bg-white rounded-km p-6">
         <SectionTitle>Immobilie</SectionTitle>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8">
           {f('kaufpreis', 'Kaufpreis (\u20ac)', 'Angebotspreis der Immobilie. Kaufnebenkosten werden zus\u00e4tzlich berechnet.', 10000)}
@@ -153,6 +144,15 @@ export default function InputSection({ mode, values: v, onChange }: InputSection
           </div>
         </Card>
       )}
+
+      <Card className="bg-white rounded-km p-6">
+        <SectionTitle>Rahmenbedingungen</SectionTitle>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-8">
+          {f('infl', 'Inflation (% p. a.)', 'Allgemeine Preissteigerungsrate \u2014 bestimmt, wie schnell Instandhaltungskosten steigen. <strong>Historisch DE:</strong> ~2\u20133%, EZB-Ziel: 2%.', 0.1)}
+          {f('rend', 'Depot-Rendite (% p. a.)', 'Erwartete j\u00e4hrliche Rendite des ETF-Depots. <strong>MSCI World:</strong> historisch ~7\u20138% brutto, nach Kosten konservativ 5\u20137%. Anleihen/Tagesgeld: 2\u20134%.', 0.5)}
+          {f('kest', 'KESt auf Depot-Gewinne (%)', 'Effektiver Steuersatz auf ETF-Gewinne beim Verkauf.<br><strong>Aktien-ETF:</strong> 25% \u00d7 0,7 Teilfreistellung \u00d7 1,055 Soli = 18,46%<br><strong>Anleihen/Geldmarkt:</strong> 26,375%', 0.5)}
+        </div>
+      </Card>
     </div>
   );
 }
