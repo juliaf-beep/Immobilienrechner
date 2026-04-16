@@ -99,31 +99,19 @@ export function calcEigen(s: SharedInputs, e: EigenInputs): EigenResult | null {
   const Y = 30;
   const chartData: ChartData[] = [];
   let rs = darl, immo = s.kp, depot = s.ek, inv = s.ek, rent = e.miete, ih = initIH;
-  // Käuferin-Depot: Wenn Kaufkosten < Miete, investiert die Käuferin die Ersparnis
-  let kDepot = 0, kDepotInv = 0;
 
   for (let y = 0; y <= Y; y++) {
-    const kDepotGains = Math.max(0, kDepot - kDepotInv);
-    const kDepotNet = kDepot - kDepotGains * s.kest;
-    const kVal = Math.round(immo - rs + kDepotNet);
+    const kVal = Math.round(immo - rs);
     const gains = Math.max(0, depot - inv);
     const mVal = Math.round(depot - gains * s.kest);
     chartData.push({ year: y, kaeufer: kVal, mieter: mVal });
     if (y < Y) {
       // Nach Kreditende fällt die Annuität weg
       const annYear = rs > 0 ? ann : 0;
-      const kaufKosten = annYear + s.verw + ih;
-      // Mieterin investiert Differenz wenn Kaufen teurer
-      const spar = Math.max(0, kaufKosten - rent) + e.xSpar;
-      // Käuferin investiert Differenz wenn Mieten teurer
-      const kSpar = Math.max(0, rent - kaufKosten);
+      const spar = Math.max(0, annYear + s.verw + ih - rent) + e.xSpar;
       inv += spar * 12;
-      kDepotInv += kSpar * 12;
       for (let m = 0; m < 12; m++) { if (rs <= 0) break; rs = Math.max(0, rs - (ann - rs * mr)); }
-      immo *= (1 + s.ws);
-      depot = depot * (1 + s.rend) + spar * 12;
-      kDepot = kDepot * (1 + s.rend) + kSpar * 12;
-      rent *= (1 + e.ms); ih *= (1 + s.infl);
+      immo *= (1 + s.ws); depot = depot * (1 + s.rend) + spar * 12; rent *= (1 + e.ms); ih *= (1 + s.infl);
     }
   }
 
