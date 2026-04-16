@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "@mmp/shared-ui/mmp/styles/theme.css";
+
+@source "../node_modules/@mmp/shared-ui/dist";
+
+html {
+  color-scheme: light;
+  background-color: white;
+}
+
+@theme {
+  --color-km-uv: #6100FF;
+  --color-km-lav: #AEB4F4;
+  --color-km-zit: #FEFFBD;
+  --color-km-apr: #FFC163;
+  --color-km-creme: #FFF6EE;
+  --color-km-bord: #3F061A;
+  --color-km-ice: #EFF1FF;
+  --color-km-muted: #585D94;
+  --radius-km: 1.25rem;
+}
