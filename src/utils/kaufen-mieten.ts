@@ -106,7 +106,9 @@ export function calcEigen(s: SharedInputs, e: EigenInputs): EigenResult | null {
     const mVal = Math.round(depot - gains * s.kest);
     chartData.push({ year: y, kaeufer: kVal, mieter: mVal });
     if (y < Y) {
-      const spar = Math.max(0, ann + s.verw + ih - rent) + e.xSpar;
+      // Nach Kreditende fällt die Annuität weg
+      const annYear = rs > 0 ? ann : 0;
+      const spar = Math.max(0, annYear + s.verw + ih - rent) + e.xSpar;
       inv += spar * 12;
       for (let m = 0; m < 12; m++) { if (rs <= 0) break; rs = Math.max(0, rs - (ann - rs * mr)); }
       immo *= (1 + s.ws); depot = depot * (1 + s.rend) + spar * 12; rent *= (1 + e.ms); ih *= (1 + s.infl);
@@ -246,14 +248,16 @@ export function calcKapital(s: SharedInputs, k: KapitalInputs): KapitalResult | 
     chartData.push({ year: y, kaeufer: Math.round((immo - rs) + surplus), mieter: Math.round(etf - Math.max(0, etf - etfInv) * s.kest) });
     if (y < Y) {
       const rsPrev = rs;
+      // Tilgung: nur wenn noch Restschuld vorhanden
+      const annYear = rsPrev > 0 ? ann * 12 : 0;
       for (let m = 0; m < 12; m++) { if (rs <= 0) break; rs = Math.max(0, rs - (ann - rs * mr)); }
       const gross = rent * 12 * (1 - k.leer);
-      const zinsD = rsPrev * s.zins;
+      const zinsD = rsPrev > 0 ? rsPrev * s.zins : 0;
       const afaD = s.kp * k.afa;
       const costs = (s.verw + ih) * 12;
       const tax = Math.max(0, gross - zinsD - afaD - costs) * k.grenz;
       const netInc = gross - tax;
-      const netCF = netInc - ann * 12 - costs;
+      const netCF = netInc - annYear - costs;
       surplus = surplus * (1 + s.rend) + Math.max(0, netCF);
       const etfInvest = Math.max(0, -netCF);
       etf = etf * (1 + s.rend) + etfInvest;
