@@ -196,7 +196,8 @@ export function calcKapital(s: SharedInputs, k: KapitalInputs): KapitalResult | 
   const initAfaJ = s.kp * k.afa;
   const initCostsJ = (s.verw + initIH) * 12;
   const initTaxSave = (initZinsJ + initAfaJ + initCostsJ) * k.grenz;
-  const initTax = Math.max(0, initGross - initZinsJ - initAfaJ - initCostsJ) * k.grenz;
+  // Verluste aus V&V gegen anderes Einkommen verrechenbar (negativer Wert = Steuerersparnis)
+  const initTax = (initGross - initZinsJ - initAfaJ - initCostsJ) * k.grenz;
   const initNetInc = initGross - initTax;
   const initPocketM = (ann * 12 + initCostsJ - initNetInc) / 12;
   const initRentalM = -initPocketM;
@@ -242,10 +243,13 @@ export function calcKapital(s: SharedInputs, k: KapitalInputs): KapitalResult | 
   const Y = 30;
   const chartData: ChartData[] = [];
   let rs = darl, immo = s.kp, rent = k.mietein, ih = initIH;
-  let surplus = 0, etf = s.ek, etfInv = s.ek;
+  let surplus = 0, surplusInv = 0, etf = s.ek, etfInv = s.ek;
 
   for (let y = 0; y <= Y; y++) {
-    chartData.push({ year: y, kaeufer: Math.round((immo - rs) + surplus), mieter: Math.round(etf - Math.max(0, etf - etfInv) * s.kest) });
+    // Surplus-Gewinne unterliegen KESt (reinvestiert in ETF)
+    const surplusGains = Math.max(0, surplus - surplusInv);
+    const surplusNet = surplus - surplusGains * s.kest;
+    chartData.push({ year: y, kaeufer: Math.round((immo - rs) + surplusNet), mieter: Math.round(etf - Math.max(0, etf - etfInv) * s.kest) });
     if (y < Y) {
       const rsPrev = rs;
       // Tilgung: nur wenn noch Restschuld vorhanden
@@ -255,10 +259,13 @@ export function calcKapital(s: SharedInputs, k: KapitalInputs): KapitalResult | 
       const zinsD = rsPrev > 0 ? rsPrev * s.zins : 0;
       const afaD = s.kp * k.afa;
       const costs = (s.verw + ih) * 12;
-      const tax = Math.max(0, gross - zinsD - afaD - costs) * k.grenz;
+      // Verluste aus V&V verrechenbar (negativer tax = Steuerersparnis)
+      const tax = (gross - zinsD - afaD - costs) * k.grenz;
       const netInc = gross - tax;
       const netCF = netInc - annYear - costs;
-      surplus = surplus * (1 + s.rend) + Math.max(0, netCF);
+      const surplusAdd = Math.max(0, netCF);
+      surplus = surplus * (1 + s.rend) + surplusAdd;
+      surplusInv += surplusAdd;
       const etfInvest = Math.max(0, -netCF);
       etf = etf * (1 + s.rend) + etfInvest;
       etfInv += etfInvest;
