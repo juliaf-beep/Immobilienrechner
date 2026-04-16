@@ -129,7 +129,7 @@ export function calcEigen(s: SharedInputs, e: EigenInputs): EigenResult | null {
     win = true;
   } else if (chartData[Y].kaeufer >= chartData[Y].mieter) {
     headline = 'Kauf lohnt sich langfristig';
-    subtitle = 'Kein klarer Kreuzungspunkt \u2014 K\u00e4uferin liegt nach 30 Jahren vorne.';
+    subtitle = 'Kein klarer Break-Even \u2014 K\u00e4uferin liegt nach 30 Jahren vorne.';
     win = true;
   } else {
     headline = 'Mieten + Investieren ist besser';
@@ -172,7 +172,7 @@ export function calcEigen(s: SharedInputs, e: EigenInputs): EigenResult | null {
   ];
 
   const chartExplain = `<strong>K\u00e4uferin (violett):</strong> Immobilienwert minus Restschuld \u2014 ihr Netto-Eigenkapital. Startet bei <strong>${E(chartData[0].kaeufer)}</strong> (EK minus ${E(nk)} Nebenkosten). | <strong>Mieterin (gestrichelt):</strong> ETF-Depot nach KESt \u2014 startet mit dem vollen EK und investiert die Kostendifferenz monatlich (anf\u00e4ngs ${E(initSpar)}/Mo.).`
-    + (be ? ` <strong>Kreuzungspunkt: Jahr ${be}.</strong>` : '');
+    + (be ? ` <strong>Break-Even: Jahr ${be}.</strong>` : '');
 
   return { metrics, insights, chartData, breakeven: be, headline, subtitle, win, chartExplain };
 }
@@ -287,7 +287,7 @@ export function calcKapital(s: SharedInputs, k: KapitalInputs): KapitalResult | 
     win = true;
   } else if (chartData[Y].kaeufer >= chartData[Y].mieter) {
     headline = 'Immobilie lohnt sich langfristig';
-    subtitle = 'Kein klarer Kreuzungspunkt \u2014 Vermieterin liegt nach 30 Jahren vorne.';
+    subtitle = 'Kein klarer Break-Even \u2014 Vermieterin liegt nach 30 Jahren vorne.';
     win = true;
   } else {
     headline = 'ETF-Depot ist rentabler';
@@ -310,7 +310,7 @@ export function calcKapital(s: SharedInputs, k: KapitalInputs): KapitalResult | 
     ? `EK als Einmalanlage + monatlich ${E(initPocketM)} Eigenanteil (Annuit\u00e4t + Kosten \u2212 Mieteinnahmen netto)`
     : `nur das EK als Einmalanlage \u2014 Immobilie ist cashflow-positiv`;
   const chartExplain = `<strong>Vermieterin (violett):</strong> Immobilien-EK (Wert \u2212 Restschuld) + reinvestierter Miet\u00fcberschuss. | <strong>ETF-Investorin (gestrichelt):</strong> Investiert ${etfDesc} \u2014 exakt denselben monatlichen Geldeinsatz. Depot w\u00e4chst immer, keine Entnahmen.`
-    + (be ? ` <strong>Kreuzungspunkt: Jahr ${be}.</strong>` : '');
+    + (be ? ` <strong>Break-Even: Jahr ${be}.</strong>` : '');
 
   const insights: Insight[] = [
     {

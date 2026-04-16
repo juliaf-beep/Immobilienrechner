@@ -27,7 +27,7 @@ export default function WealthChart({ data, breakeven, labelA, labelB, explain }
           </div>
           {breakeven !== null && (
             <div className="flex items-center gap-1.5 text-xs text-km-muted">
-              <span className="w-[18px] h-0.5 bg-km-apr" />Kreuzungspunkt
+              <span className="w-[18px] h-0.5 bg-km-apr" />Break-Even
             </div>
           )}
         </div>
